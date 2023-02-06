@@ -18,7 +18,7 @@ class MenusController {
       res.status(400).send(error);
     }
   }
-  // /menus
+
   public async post(req: Request, res: Response) {
     try {
       const menu = req.body as MenuModel;
