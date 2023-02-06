@@ -1,75 +1,44 @@
 import express, { Express, Request, Response } from "express";
 import bodyParser from "body-parser";
+import pool from "./config/dbconnector";
+import menusRouter from "./features/menus/router";
+import { defaultMaxListeners } from "events";
 
-const app = express();
+class Server {
+  private app;
 
-app.use(bodyParser.json());
-
-type Course = {
-  id: number;
-  name: string;
-  price: number;
-  categories_name: string;
-};
-
-app.post("/courses", (req, res) => {
-  const exitingDatas: Course[] = [
-    {
-      id: 1,
-      name: "flutter-101",
-      price: 20000,
-      categories_name: "online",
-    },
-    {
-      id: 2,
-      name: "database-101",
-      price: 12000,
-      categories_name: "online",
-    },
-  ];
-
-  if (exitingDatas.filter((o) => o.name === req.body.name).length > 0) {
-    res.status(400).send();
-    return;
+  constructor() {
+    this.app = express();
+    this.config();
+    this.routerConfig();
+    this.dbConnect();
   }
 
-  // save to database here.
+  private config() {
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(bodyParser.json({ limit: "1mb" })); // 100kb default
+  }
 
-  res.status(201).send(req.body);
-});
+  private dbConnect() {
+    pool.connect(function (err, client, done) {
+      if (err) throw err; //throw new Error(err);
+      console.log("Connected pg");
+    });
+  }
 
-app.get("/courses", (_, res) => {
-  const mockResponseBody: Course[] = [
-    {
-      id: 1,
-      name: "flutter-101",
-      price: 20000,
-      categories_name: "online",
-    },
-    {
-      id: 2,
-      name: "database-101",
-      price: 12000,
-      categories_name: "online",
-    },
-    {
-      id: 3,
-      name: "full-stack-101",
-      price: 15000,
-      categories_name: "online",
-    },
-    {
-      id: 4,
-      name: "jira-101",
-      price: 8000,
-      categories_name: "online",
-    },
-  ];
+  private routerConfig() {
+    this.app.use(menusRouter);
+  }
 
-  res.send(mockResponseBody);
-});
+  public start = (port: number) => {
+    return new Promise((resolve, reject) => {
+      this.app
+        .listen(port, () => {
+          resolve(port);
+        })
+        .on("error", (err: Object) => reject(err));
+    });
+  };
+}
 
-const port = 5000;
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+export default Server;

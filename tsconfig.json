@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "target": "es2017",
-    "outDir": "./dist",
+    "outDir": "./dist/src",
     "baseUrl": "./src",
     "moduleResolution": "node"
   },
