@@ -1,47 +1,72 @@
-import * as express from "express";
-import { Express, Request, Response } from "express";
-import * as bodyParser from "body-parser";
+import express, { Express, Request, Response } from "express";
+import bodyParser from "body-parser";
 
-const app: Express = express();
+const app = express();
 
 app.use(bodyParser.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world!");
-});
+type Course = {
+  id: number;
+  name: string;
+  price: number;
+  categories_name: string;
+};
 
-app.get("/menus", (_, res: Response) => {
-  const mockResponseBody = [
+app.post("/courses", (req, res) => {
+  const exitingDatas: Course[] = [
     {
       id: 1,
-      name: "ผัดกระเพราไก่",
-      price: 50,
-      current_price: 40,
-      category_name: "ผัด",
+      name: "flutter-101",
+      price: 20000,
+      categories_name: "online",
     },
     {
       id: 2,
-      name: "ผัดกระเพราเนื้อ",
-      price: 50,
-      current_price: 40,
-      category_name: "ผัด",
+      name: "database-101",
+      price: 12000,
+      categories_name: "online",
+    },
+  ];
+
+  if (exitingDatas.filter((o) => o.name === req.body.name).length > 0) {
+    res.status(400).send();
+    return;
+  }
+
+  // save to database here.
+
+  res.status(201).send(req.body);
+});
+
+app.get("/courses", (_, res) => {
+  const mockResponseBody: Course[] = [
+    {
+      id: 1,
+      name: "flutter-101",
+      price: 20000,
+      categories_name: "online",
+    },
+    {
+      id: 2,
+      name: "database-101",
+      price: 12000,
+      categories_name: "online",
     },
     {
       id: 3,
-      name: "ผัดกระเพราหมู",
-      price: 50,
-      current_price: 35,
-      category_name: "ผัด",
+      name: "full-stack-101",
+      price: 15000,
+      categories_name: "online",
+    },
+    {
+      id: 4,
+      name: "jira-101",
+      price: 8000,
+      categories_name: "online",
     },
   ];
 
   res.send(mockResponseBody);
-});
-
-app.post("/menus", (req: Request, res: Response) => {
-  // save to database here.
-
-  res.send(req.body);
 });
 
 const port = 5000;
