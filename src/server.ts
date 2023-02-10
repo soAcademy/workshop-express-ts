@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { dbconnectorPool } from "./config";
-import { menusRouter } from "./features/menus";
+import { menusRouter } from "./features";
 
 class Server {
   private app;
