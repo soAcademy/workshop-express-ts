@@ -57,7 +57,6 @@ app.post("/menus", async (req: Request, res: Response) => {
         `;
     await client.query(sql);
 
-    client.release();
     res.status(201).send();
   } catch (error) {
     res.status(400).send(error);
