@@ -6,4 +6,4 @@ type MenuModel = {
   categories_id: string;
 };
 
-export default MenuModel;
+export { MenuModel };

@@ -1,8 +1,7 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
-import pool from "./config/dbconnector";
-import menusRouter from "./features/menus/router";
-import { defaultMaxListeners } from "events";
+import { dbconnectorPool } from "./config";
+import { menusRouter } from "./features";
 
 class Server {
   private app;
@@ -20,8 +19,8 @@ class Server {
   }
 
   private dbConnect() {
-    pool.connect(function (err, client, done) {
-      if (err) throw err; //throw new Error(err);
+    dbconnectorPool.connect(function (err, client, done) {
+      if (err) throw err;
       console.log("Connected pg");
     });
   }
@@ -41,4 +40,4 @@ class Server {
   };
 }
 
-export default Server;
+export { Server };

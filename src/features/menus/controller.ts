@@ -1,21 +1,25 @@
-import pool from "../../config/dbconnector";
+import { dbconnectorPool } from "../../config";
 import { Request, Response } from "express";
-import MenuModel from "./model";
+import { MenuModel } from "./model";
+import { QueryModel } from "../../models";
 
 class MenusController {
-  public async get(req: Request, res: Response) {
+  public async get(req: Request<{}, {}, {}, QueryModel>, res: Response) {
+    const client = await dbconnectorPool.connect();
     try {
-      const client = await pool.connect();
+      const { query } = req;
+      query.limit = query.limit > 0 ? query.limit : 10;
 
-      const sql = "SELECT * FROM food_menus";
+      const sql = `SELECT * FROM food_menus
+                    limit ${query.limit}`;
       const { rows } = await client.query(sql);
       const menus: MenuModel[] = rows;
-
-      client.release();
 
       res.send(menus);
     } catch (error) {
       res.status(400).send(error);
+    } finally {
+      client.release();
     }
   }
 
@@ -23,7 +27,7 @@ class MenusController {
     try {
       const menu = req.body as MenuModel;
 
-      const client = await pool.connect();
+      const client = await dbconnectorPool.connect();
 
       const sql = `
       INSERT INTO public.food_menus
@@ -40,4 +44,4 @@ class MenusController {
   }
 }
 
-export default MenusController;
+export { MenusController };
