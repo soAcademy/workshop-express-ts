@@ -1,10 +1,10 @@
 import { Router } from "express";
-import MenusController from "./controller";
+import { MenusController } from "./controller";
 
-const router = Router();
+const menusRouter = Router();
 const menusController = new MenusController();
 
-router.get("/menus", menusController.get);
-router.post("/menus", menusController.post);
+menusRouter.get("/menus", menusController.get);
+menusRouter.post("/menus", menusController.post);
 
-export default router;
+export { menusRouter };
