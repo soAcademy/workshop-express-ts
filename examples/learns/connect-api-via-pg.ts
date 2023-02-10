@@ -22,6 +22,10 @@ type MenuModel = {
   discount: string;
   categories_id: string;
 };
+
+type QueryModel = {
+  limit: number;
+};
 // model
 
 app.use(bodyParser.json());
@@ -30,20 +34,28 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello world!");
 });
 
-app.get("/menus", async (_, res: Response) => {
-  const client = await pool.connect();
-  try {
-    const sql = "SELECT * FROM food_menus";
-    const { rows } = await client.query(sql);
-    const menus: MenuModel[] = rows;
+app.get(
+  "/menus",
+  async (req: Request<{}, {}, {}, QueryModel>, res: Response) => {
+    const client = await pool.connect();
+    try {
+      const { query } = req;
 
-    res.send(menus);
-  } catch (error) {
-    res.status(400).send(error);
-  } finally {
-    client.release();
+      query.limit = query.limit > 0 ? query.limit : 10;
+
+      const sql = `SELECT * FROM food_menus
+                    limit ${query.limit}`;
+      const { rows } = await client.query(sql);
+      const menus: MenuModel[] = rows;
+
+      res.send(menus);
+    } catch (error) {
+      res.status(400).send(error);
+    } finally {
+      client.release();
+    }
   }
-});
+);
 
 app.post("/menus", async (req: Request, res: Response) => {
   const client = await pool.connect();
