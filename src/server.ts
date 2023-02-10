@@ -20,7 +20,7 @@ class Server {
 
   private dbConnect() {
     dbconnectorPool.connect(function (err, client, done) {
-      if (err) throw err; //throw new Error(err);
+      if (err) throw err;
       console.log("Connected pg");
     });
   }
