@@ -1,5 +1,4 @@
-import * as express from "express";
-
+import express from "express";
 const app = express();
 
 type Course = {
@@ -9,7 +8,9 @@ type Course = {
   categories_name: string;
 };
 
-app.get("/courses", (_, res) => {
+type ReqQuery = { sort?: string };
+
+app.get("/courses", (req: express.Request<{}, {}, {}, ReqQuery>, res) => {
   const mockResponseBody: Course[] = [
     {
       id: 1,
@@ -36,7 +37,19 @@ app.get("/courses", (_, res) => {
       categories_name: "online",
     },
   ];
+  const sort = req.query.sort;
 
+  if (sort) {
+    return res.send(
+      mockResponseBody.sort((a: Course, b: Course) => {
+        const diff = a.id - b.id;
+        if (sort === "desc") {
+          return diff * -1;
+        }
+        return diff;
+      })
+    );
+  }
   res.send(mockResponseBody);
 });
 

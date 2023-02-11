@@ -1,4 +1,4 @@
-type QueryModel = {
+type BaseReqQuery = {
   limit: number;
 };
-export { QueryModel };
+export { BaseReqQuery };
