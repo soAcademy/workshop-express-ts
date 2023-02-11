@@ -27,6 +27,7 @@ type Course = {
 
 type ReqQuery = {
   limit: number;
+  sort: string;
 };
 // model
 
@@ -39,8 +40,14 @@ app.get(
     try {
       const { query } = req;
       const limit: number = query.limit > 0 ? query.limit : 10;
+      let sort = "asc";
+
+      if (query.sort === "desc") {
+        sort = query.sort;
+      }
 
       const sql = `SELECT * FROM public.courses
+                    order by id ${sort}
                     limit ${limit}`;
       const { rows } = await client.query(sql);
       const menus: Course[] = rows;
