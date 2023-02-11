@@ -1,4 +1,4 @@
-import { dbconnectorPool } from "../../config";
+import { dbconnectorPool } from "../../db";
 import { Request, Response } from "express";
 import { MenuModel } from "./model";
 import { BaseReqQuery } from "../../models";

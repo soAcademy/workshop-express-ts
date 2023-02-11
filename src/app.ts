@@ -1,7 +1,10 @@
 import { Server } from "./server";
+import { validateEnv } from "./config";
+import { appConfig } from "./config";
 
-const port = parseInt(process.env.PORT || "5000");
+validateEnv();
 
+const port = appConfig.port;
 const starter = new Server()
   .start(port)
   .then((port) => console.log(`Running on port ${port}`))
