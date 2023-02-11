@@ -1,8 +1,9 @@
 import { Pool } from "pg";
+import { appConfig } from "../config";
 
 const dbconnectorPool = new Pool({
   max: 20,
-  connectionString: "postgres://postgres:1234@localhost:5432/postgres",
+  connectionString: appConfig.postgresConnectionString,
   idleTimeoutMillis: 30000,
 });
 
