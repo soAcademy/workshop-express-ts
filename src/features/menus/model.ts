@@ -3,7 +3,7 @@ type MenuModel = {
   name: string;
   price: number;
   discount: string;
-  categories_id: string;
+  categories_id: number;
 };
 
 export { MenuModel };
