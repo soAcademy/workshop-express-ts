@@ -30,6 +30,10 @@ type ReqQuery = {
   sort: string;
   where?: string;
 };
+
+type ReqParams = {
+  id: number;
+};
 // model
 
 app.use(bodyParser.json());
@@ -56,9 +60,37 @@ app.get(
       sql = sql.concat(`limit ${limit} `);
 
       const { rows } = await client.query(sql);
-      const menus: Course[] = rows;
+      const courses: Course[] = rows;
 
-      res.send(menus);
+      res.send(courses);
+    } catch (error) {
+      res.status(400).send(error);
+    } finally {
+      client.release();
+    }
+  }
+);
+
+app.get(
+  "/courses/:id",
+  async (req: Request<ReqParams, {}, {}, {}>, res: Response) => {
+    const client = await pool.connect();
+    try {
+      const { id } = req.params;
+
+      let sql = `SELECT * FROM public.courses
+                    where id = ${id}`;
+
+      const { rows } = await client.query(sql);
+      const courses: Course[] = rows;
+
+      if (courses.length === 0) {
+        return res
+          .status(400)
+          .send({ message: "cannot find your id in database" });
+      }
+
+      res.send(courses);
     } catch (error) {
       res.status(400).send(error);
     } finally {
