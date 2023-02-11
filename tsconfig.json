@@ -6,7 +6,9 @@
     "target": "es2017",
     "outDir": "./dist/src",
     "baseUrl": "./src",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],

@@ -1,16 +1,22 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { menusRouter } from "./features";
-import { dbconnectorPool } from "./db";
+import { AppDataSource } from "./db";
 
 class Server {
   private app;
 
   constructor() {
+    this.initAppDataSource()
+      .then(() => {
+        console.log("prepair AppDataSource done.");
+      })
+      .catch((error) => {
+        throw error;
+      });
     this.app = express();
     this.config();
     this.routerConfig();
-    this.dbConnect();
   }
 
   private config() {
@@ -18,11 +24,8 @@ class Server {
     this.app.use(bodyParser.json({ limit: "1mb" })); // 100kb default
   }
 
-  private dbConnect() {
-    dbconnectorPool.connect(function (err, client, done) {
-      if (err) throw err;
-      console.log("Connected pg");
-    });
+  private async initAppDataSource() {
+    await AppDataSource.initialize();
   }
 
   private routerConfig() {
