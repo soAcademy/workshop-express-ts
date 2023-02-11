@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import * as express from "express";
 const app = express();
 
 type ReqQuery = { limit?: number };
