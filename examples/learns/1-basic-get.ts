@@ -40,4 +40,19 @@ app.get("/menus", (req: express.Request<{}, {}, {}, ReqQuery>, res) => {
   return res.send(mockResponseBody);
 });
 
+type ReqParams = { id: number };
+
+app.get("/menus/:id", (req: express.Request<ReqParams, {}, {}, {}>, res) => {
+  // TODO: will use for query in database
+  const { id } = req.params;
+
+  return res.send({
+    id: 1,
+    name: "ผัดกระเพราไก่",
+    price: 50,
+    current_price: 40,
+    category_name: "ผัด",
+  });
+});
+
 app.listen(5000);
