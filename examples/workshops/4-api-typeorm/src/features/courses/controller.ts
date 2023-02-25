@@ -3,6 +3,7 @@ import { CourseModel } from "./model";
 import { BaseReqParams, BaseReqQuery } from "../../models";
 import { AppDataSource } from "../../db";
 import { Courses } from "../../entities";
+import { FindManyOptions, Like } from "typeorm";
 
 const courseRepository = AppDataSource.getRepository(Courses);
 
@@ -11,26 +12,46 @@ class CourseController {
     try {
       const { query } = req;
       const limit = query.limit > 0 ? query.limit : 10;
+      const where: string = query.where;
 
-      const courseEntities = await courseRepository.find({ take: limit });
+      let queryObj: FindManyOptions<Courses> = {
+        take: limit,
+        order: {
+          id: query.sort === "desc" ? query.sort : "asc",
+        },
+      };
 
-      res.send(courseEntities);
+      if (where != null) {
+        queryObj = {
+          ...queryObj,
+          where: {
+            name: Like(`%${where}%`),
+          },
+        };
+      }
+
+      const courseEntities = await courseRepository.find(queryObj);
+
+      return res.send(courseEntities);
     } catch (error) {
-      res.status(400).send(error);
+      return res.status(500).send(error);
     }
   }
 
   public async getById(req: Request<BaseReqParams, {}, {}, {}>, res: Response) {
     const { id } = req.params;
+    try {
+      const courseEntity = await courseRepository.findOneBy({ id: id });
 
-    const courseEntity = await courseRepository.findOneBy({ id: id });
-
-    if (courseEntity != null) {
-      res.send(courseEntity);
-      return;
+      if (courseEntity != null) {
+        return res.send(courseEntity);
+      }
+      return res
+        .status(400)
+        .send({ message: "cannot find your id in database" });
+    } catch (error) {
+      return res.status(500).send(error);
     }
-    res.status(400).send({ message: "cannot find your id in database" });
-    return;
   }
 
   public async post(req: Request, res: Response) {
@@ -48,9 +69,9 @@ class CourseController {
 
       await courseRepository.save(courseEntity);
 
-      res.status(201).send({ id: courseEntity.id });
+      return res.status(201).send({ id: courseEntity.id });
     } catch (error) {
-      res.status(400).send(error);
+      return res.status(500).send(error);
     }
   }
 }
