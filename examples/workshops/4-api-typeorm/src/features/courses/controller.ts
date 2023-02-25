@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CourseModel } from "./model";
-import { BaseReqQuery } from "../../models";
+import { BaseReqParams, BaseReqQuery } from "../../models";
 import { AppDataSource } from "../../db";
 import { Courses } from "../../entities";
 
@@ -12,12 +12,25 @@ class CourseController {
       const { query } = req;
       const limit = query.limit > 0 ? query.limit : 10;
 
-      const courseEntity = await courseRepository.find({ take: limit });
+      const courseEntities = await courseRepository.find({ take: limit });
 
-      res.send(courseEntity);
+      res.send(courseEntities);
     } catch (error) {
       res.status(400).send(error);
     }
+  }
+
+  public async getById(req: Request<BaseReqParams, {}, {}, {}>, res: Response) {
+    const { id } = req.params;
+
+    const courseEntity = await courseRepository.findOneBy({ id: id });
+
+    if (courseEntity != null) {
+      res.send(courseEntity);
+      return;
+    }
+    res.status(400).send({ message: "cannot find your id in database" });
+    return;
   }
 
   public async post(req: Request, res: Response) {
