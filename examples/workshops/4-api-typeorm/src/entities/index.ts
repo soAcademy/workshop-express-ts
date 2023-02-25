@@ -1,1 +1,1 @@
-export * from "./food-menu.entity";
+export * from "./courses.entity";
