@@ -5,9 +5,11 @@ CREATE DATABASE upload_userinfo;
 -- DROP TABLE public.files;
 CREATE TABLE public.files (
     id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-    filename varchar NOT NULL,
+    "filename" varchar NOT NULL,
     mimetype varchar NOT NULL,
     destination varchar NOT NULL,
+    originalname varchar NOT NULL,
+    path varchar NOT NULL,
     CONSTRAINT files_pk PRIMARY KEY (id)
 );
 

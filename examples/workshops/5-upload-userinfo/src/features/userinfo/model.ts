@@ -1,8 +1,8 @@
 type UserInfoModel = {
   id: number;
-  first_name: string;
-  last_name: string;
-  file_id: number;
+  firstName: string;
+  lastName: string;
+  display: any;
 };
 
 export { UserInfoModel };
