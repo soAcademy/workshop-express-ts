@@ -18,6 +18,7 @@ CREATE TABLE public.userinfos (
     id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
     first_name varchar NULL,
     last_name varchar NULL,
+    display_id int4 NULL,
     CONSTRAINT userinfos_pk PRIMARY KEY (id),
-    CONSTRAINT userinfos_fk FOREIGN KEY (id) REFERENCES public.files(id)
+    CONSTRAINT userinfos_display_fk FOREIGN KEY (display_id) REFERENCES public.files(id)
 );
