@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { CourseController } from "./controller";
+import { UserInfoController } from "./controller";
 
 const router = Router();
-const controller = new CourseController();
+const controller = new UserInfoController();
 
-router.get("/courses", controller.get);
-router.get("/courses/:id", controller.getById);
-router.post("/courses", controller.post);
+router.get("/userinfos", controller.get);
+router.get("/userinfos/:id", controller.getById);
+router.post("/userinfos", controller.post);
 
-export { router as coursesRouter };
+export { router as userinfosRouter };

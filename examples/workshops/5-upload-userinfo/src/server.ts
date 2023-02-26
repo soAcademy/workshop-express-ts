@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { coursesRouter } from "./features";
+import { userinfosRouter } from "./features";
 import { AppDataSource } from "./db";
 
 class Server {
@@ -29,7 +29,7 @@ class Server {
   }
 
   private routerConfig() {
-    this.app.use(coursesRouter);
+    this.app.use(userinfosRouter);
   }
 
   public start = (port: number) => {

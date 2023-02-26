@@ -11,6 +11,6 @@ export class UserInfo {
   @Column({ name: "last_name" })
   lastName: string;
 
-  @Column({ name: "file_id" })
-  fileId: number;
+  @Column({ name: "display_id" })
+  displayId: number;
 }

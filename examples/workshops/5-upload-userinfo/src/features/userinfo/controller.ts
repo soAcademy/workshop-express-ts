@@ -3,33 +3,12 @@ import { UserInfoModel } from "./model";
 import { BaseReqParams, BaseReqQuery } from "../../models";
 import { AppDataSource } from "../../db";
 import { UserInfo } from "../../entities";
-import { FindManyOptions, Like } from "typeorm";
 
 const userInfoRepository = AppDataSource.getRepository(UserInfo);
 
-class CourseController {
+class UserInfoController {
   public async get(req: Request<{}, {}, {}, BaseReqQuery>, res: Response) {
     try {
-      // const { query } = req;
-      // const limit = query.limit > 0 ? query.limit : 10;
-      // const where: string = query.where;
-
-      // let queryObj: FindManyOptions<UserInfo> = {
-      //   take: limit,
-      //   order: {
-      //     id: query.sort === "desc" ? query.sort : "asc",
-      //   },
-      // };
-
-      // if (where != null) {
-      //   queryObj = {
-      //     ...queryObj,
-      //     where: {
-      //       name: Like(`%${where}%`),
-      //     },
-      //   };
-      // }
-      // queryObj
       const datas = await userInfoRepository.find();
 
       return res.send(datas);
@@ -76,4 +55,4 @@ class CourseController {
   }
 }
 
-export { CourseController };
+export { UserInfoController };
