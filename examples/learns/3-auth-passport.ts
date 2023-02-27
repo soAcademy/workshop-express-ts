@@ -7,14 +7,14 @@ import bodyParser from "body-parser";
 const app = express();
 app.use(bodyParser.json());
 
-const jwtSecret = "szxczxcasdasd";
+const jwtSecret = "thisisexamplejwtsecret";
 
 type UserModel = {
   username: String;
   password: String;
 };
 
-app.post("/login", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
+app.post("/register", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
   const hashedPassword = bcrypt.hashSync(
     req.body.password,
     bcrypt.genSaltSync(10)
@@ -25,6 +25,22 @@ app.post("/login", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
   //   username: req.body.username,
   //   password: hashedPassword,
   // });
+
+  const token = jwt.sign(
+    { username: req.body.username }, //, scope: req.body.scope
+    jwtSecret
+  );
+
+  res.status(201).send({ token: token });
+});
+
+app.post("/login", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
+  const hashedPassword = bcrypt.hashSync(
+    req.body.password,
+    bcrypt.genSaltSync(10)
+  );
+
+  // TODO: compare user/pass in db
 
   const token = jwt.sign(
     { username: req.body.username }, //, scope: req.body.scope
