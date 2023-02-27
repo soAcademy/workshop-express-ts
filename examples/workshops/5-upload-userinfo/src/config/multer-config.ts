@@ -1,5 +1,6 @@
 import multer from "multer";
+import { appConfig } from "./app-config";
 
-const multerUpload = multer({ dest: __dirname + `/uploads/` });
+const multerUpload = multer({ dest: appConfig.storagePath + `/uploads/` });
 
 export { multerUpload };
