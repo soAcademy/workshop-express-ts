@@ -41,6 +41,10 @@ app.post("/login", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
   );
 
   // TODO: compare user/pass in db
+  // if req.body.username & hashedPassword not match in database
+  //   res.status(401).send({ message: "Invalid username/password" });
+  //   return;
+  // }
 
   const token = jwt.sign(
     { username: req.body.username }, //, scope: req.body.scope
