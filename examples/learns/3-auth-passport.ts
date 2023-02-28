@@ -9,7 +9,7 @@ const ExtractJwt = passportJwt.ExtractJwt;
 const app = express();
 app.use(bodyParser.json());
 
-const JWTSecret = "thisisexamplejwtsecret";
+const jwtSecret = "thisisexamplejwtsecret";
 
 type UserModel = {
   username: String;
@@ -30,7 +30,7 @@ app.post("/register", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
 
   const token = jwt.sign(
     { username: req.body.username }, //, scope: req.body.scope
-    JWTSecret
+    jwtSecret
   );
 
   res.status(201).send({ token: token });
@@ -50,7 +50,7 @@ app.post("/login", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
 
   const token = jwt.sign(
     { username: req.body.username }, //, scope: req.body.scope
-    JWTSecret
+    jwtSecret
   );
 
   res.status(200).send({ token: token });
@@ -61,7 +61,7 @@ passport.use(
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: JWTSecret,
+      secretOrKey: jwtSecret,
     },
     function (jwtToken, done) {
       // TODO: implement compare username in db
