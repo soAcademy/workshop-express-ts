@@ -16,6 +16,8 @@ type UserModel = {
   password: String;
 };
 
+const defaultScope = ["GET", "POST"];
+
 app.post("/register", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
   const hashedPassword = bcrypt.hashSync(
     req.body.password,
@@ -29,7 +31,7 @@ app.post("/register", (req: Request<{}, {}, UserModel, {}>, res: Response) => {
   // });
 
   const token = jwt.sign(
-    { username: req.body.username }, //, scope: req.body.scope
+    { username: req.body.username, scope: defaultScope },
     jwtSecret
   );
 
