@@ -100,9 +100,49 @@ const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   })(req, res, next);
 };
 
+// https://www.postman.com/workshop-so-academy-course/workspace/express-workshop/request/25674280-4788d58c-29da-4023-95fc-c0a1eb11b96a
 app.get("/example-protect", authenticateJWT, (req: Request, res: Response) => {
   res.status(200).send({ message: "access passed" });
 });
+
+const authorizeJWT = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate("jwt", function (err, user, jwtToken) {
+    if (err) {
+      console.log(err);
+      return res.status(401).json({ status: "error", code: "unauthorized" });
+    }
+    if (!user) {
+      return res.status(401).json({ status: "error", code: "unauthorized" });
+    } else {
+      const scope = req.method;
+
+      const authScope = jwtToken.scope;
+      if (authScope && authScope.indexOf(scope) > -1) {
+        return next();
+      } else {
+        return res.status(401).json({ status: "error", code: "unauthorized" });
+      }
+    }
+  })(req, res, next);
+};
+
+// https://www.postman.com/workshop-so-academy-course/workspace/express-workshop/request/25674280-98cb89fb-8e3d-4068-a832-b214a6a5d4f9
+app.get(
+  "/example-protect-authorize",
+  authorizeJWT,
+  (req: Request, res: Response) => {
+    res.status(200).send({ message: "access passed" });
+  }
+);
+
+// https://www.postman.com/workshop-so-academy-course/workspace/express-workshop/request/25674280-5c8cf87b-4637-49e8-be9c-2df4ceac6000
+app.delete(
+  "/example-protect-authorize",
+  authorizeJWT,
+  (req: Request, res: Response) => {
+    res.status(200).send({ message: "access passed" });
+  }
+);
 
 app.listen(5000, () => console.log("Server started on port 5000"));
 
